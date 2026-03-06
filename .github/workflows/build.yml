@@ -1,42 +1,41 @@
-### Magisk Build - Release Only
 name: Magisk Build
-
 on:
-  push:
-    branches: [master]
-    paths:
-      - "app/**"
-      - "native/**"
-      - "build.py"
-      - ".github/workflows/build.yml"
-  pull_request:
-    branches: [master]
-  workflow_dispatch:
-
+push:
+branches: [main]
+paths:
+- "app/"
+- "native/"
+- "build.py"
+- ".github/workflows/build.yml"
+pull_request:
+branches: [main]
+workflow_dispatch:
 jobs:
-  build:
-    name: Build Magisk Release
-    runs-on: macos-15
-    steps:
-      - name: Check out
-        uses: actions/checkout@v6
-        with:
-          submodules: "recursive"
+build:
+name: Build Magisk Release
+runs-on: macos-15
+steps:
+- name: Check out
+uses: actions/checkout@v4
+with:
+submodules: "recursive"
+  - name: Setup environment
+    uses: ./.github/actions/setup
+    with:
+      is-asset-build: true
 
-      - name: Setup environment
-        uses: ./.github/actions/setup
-        with:
-          is-asset-build: true
+  - name: Make build script executable
+    run: chmod +x build.py
 
-      - name: Build release
-        run: ./build.py -vr all
+  - name: Build release
+    run: ./build.py -vr all
 
-      - name: Stop gradle daemon
-        run: ./app/gradlew --stop
+  - name: Stop gradle daemon
+    run: ./app/gradlew --stop
 
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v6
-        with:
-          name: ${{ github.sha }}-release
-          path: out
-          compression-level: 9
+  - name: Upload build artifact
+    uses: actions/upload-artifact@v4
+    with:
+      name: ${{ github.sha }}-release
+      path: out
+      compression-level: 9

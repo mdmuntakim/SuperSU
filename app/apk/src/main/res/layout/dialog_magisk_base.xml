@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="data"
+            type="com.topjohnwu.magisk.view.MagiskDialog.Data" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="24dp"
+        tools:layout_width="match_parent">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/dialog_base_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="24dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/dialog_base_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="24dp" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/dialog_base_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            gone="@{data.icon == null}"
+            android:layout_gravity="center"
+            android:src="@{data.icon}"
+            app:layout_constraintBottom_toTopOf="@+id/dialog_base_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="?attr/colorSecondary"
+            tools:src="@drawable/ic_delete_md2" />
+
+        <TextView
+            android:id="@+id/dialog_base_title"
+            gone="@{data.title.length == 0}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:text="@{data.title}"
+            android:textAppearance="?attr/textAppearanceHeadlineSmall"
+            android:textColor="?attr/colorOnSurface"
+            app:layout_constraintEnd_toEndOf="@+id/dialog_base_end"
+            app:layout_constraintStart_toStartOf="@+id/dialog_base_start"
+            app:layout_constraintTop_toBottomOf="@+id/dialog_base_icon"
+            tools:text="Dialog Title" />
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:overScrollMode="ifContentScrolls"
+            app:layout_constrainedHeight="true"
+            app:layout_constraintBottom_toTopOf="@+id/dialog_base_space"
+            app:layout_constraintEnd_toEndOf="@+id/dialog_base_end"
+            app:layout_constraintStart_toStartOf="@+id/dialog_base_start"
+            app:layout_constraintTop_toBottomOf="@+id/dialog_base_title">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/dialog_base_message"
+                    gone="@{data.message.length == 0}"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@{data.message}"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    tools:text="@tools:sample/lorem/random" />
+
+                <FrameLayout
+                    android:id="@+id/dialog_base_container"
+                    gone="@{data.message.length != 0}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </FrameLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+        <Space
+            android:id="@+id/dialog_base_space"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            app:layout_constraintBottom_toTopOf="@+id/dialog_base_buttons"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.appcompat.widget.ButtonBarLayout
+            android:id="@+id/dialog_base_buttons"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="bottom"
+            android:layoutDirection="locale"
+            android:orientation="horizontal"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/dialog_base_button_2"
+                style="?attr/borderlessButtonStyle"
+                gone="@{data.buttonNeutral.gone}"
+                android:enabled="@{data.buttonNeutral.isEnabled}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="@{() -> data.buttonNeutral.clicked()}"
+                android:text="@{data.buttonNeutral.message}"
+                app:icon="@{data.buttonNeutral.icon}"
+                tools:text="Neutral" />
+
+            <Space
+                android:id="@+id/spacer"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/dialog_base_button_3"
+                style="?attr/borderlessButtonStyle"
+                gone="@{data.buttonNegative.gone}"
+                android:enabled="@{data.buttonNegative.isEnabled}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="@{() -> data.buttonNegative.clicked()}"
+                android:text="@{data.buttonNegative.message}"
+                app:icon="@{data.buttonNegative.icon}"
+                tools:text="Cancel" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/dialog_base_button_1"
+                style="?attr/borderlessButtonStyle"
+                gone="@{data.buttonPositive.gone}"
+                android:enabled="@{data.buttonPositive.isEnabled}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="@{() -> data.buttonPositive.clicked()}"
+                android:text="@{data.buttonPositive.message}"
+                app:icon="@{data.buttonPositive.icon}"
+                tools:text="OK" />
+
+        </androidx.appcompat.widget.ButtonBarLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

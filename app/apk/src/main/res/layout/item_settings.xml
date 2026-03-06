@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="item"
+            type="com.topjohnwu.magisk.ui.settings.BaseSettingsItem" />
+
+        <variable
+            name="handler"
+            type="com.topjohnwu.magisk.ui.settings.BaseSettingsItem.Handler" />
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        style="?attr/materialCardViewOutlinedStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="4dp"
+        android:alpha="@{item.enabled ? 1f : .5f}"
+        android:clickable="@{item.enabled}"
+        android:focusable="@{item.enabled}"
+        android:onClick="@{(view) -> item.onPressed(view, handler)}"
+        app:isEnabled="@{item.enabled}">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="@{item.icon == 0 ? 16dp : 0dp}"
+            android:paddingEnd="16dp">
+
+            <ImageView
+                android:id="@+id/icon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_margin="16dp"
+                android:background="@null"
+                app:gone="@{item.icon == 0}"
+                app:srcCompat="@{item.icon}"
+                app:tint="?attr/colorPrimary"
+                tools:srcCompat="@drawable/ic_fingerprint" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                android:paddingVertical="16dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:text="@{item.title}"
+                    android:textAppearance="?attr/textAppearanceTitleMedium"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textStyle="bold"
+                    tools:lines="1"
+                    tools:text="Setting Title" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@{item.description}"
+                    android:textAppearance="?attr/textAppearanceBodySmall"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    app:gone="@{item.description.empty}"
+                    tools:lines="2"
+                    tools:text="Setting description text goes here to explain the feature." />
+
+            </LinearLayout>
+
+            <com.google.android.material.materialswitch.MaterialSwitch
+                android:id="@+id/selector_indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:checked="@{item.checked}"
+                android:focusable="@{item.enabled}"
+                android:onCheckedChanged="@{(v, c) -> item.onToggle(v, handler, c)}"
+                app:goneUnless="@{item.showSwitch}"
+                app:isEnabled="@{item.enabled}" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</layout>

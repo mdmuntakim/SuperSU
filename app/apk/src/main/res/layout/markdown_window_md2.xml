@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    android:scrollbarStyle="outsideOverlay">
+
+    <TextView
+        android:id="@+id/md_txt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:paddingVertical="16dp"
+        android:breakStrategy="balanced"
+        android:hyphenationFrequency="none"
+        android:textAppearance="?attr/textAppearanceBodyMedium"
+        android:textColor="?attr/colorOnSurface"
+        android:lineSpacingExtra="2dp"
+        tools:ignore="UnusedAttribute"
+        tools:text="This is a Material 3 text preview..." />
+
+</ScrollView>

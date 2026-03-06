@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="com.topjohnwu.magisk.databinding.DataBindingAdaptersKt" />
+        <variable
+            name="item"
+            type="com.topjohnwu.magisk.ui.superuser.PolicyRvItem" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/policy"
+            style="?attr/materialCardViewOutlinedStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginVertical="8dp"
+            android:alpha="@{item.enabled ? 1f : .5f}"
+            android:focusable="true"
+            android:nextFocusRight="@id/policy_indicator"
+            android:onClick="@{() -> item.toggleExpand()}">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="12dp">
+
+                    <ImageView
+                        android:id="@+id/policy_app_icon"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginStart="16dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@{item.icon}"
+                        tools:srcCompat="@drawable/ic_logo" />
+
+                    <TextView
+                        android:id="@+id/policy_app_name"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="16dp"
+                        android:ellipsize="middle"
+                        android:maxLines="2"
+                        android:text="@{item.title}"
+                        android:textAppearance="?attr/textAppearanceBodyLarge"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toStartOf="@+id/policy_indicator"
+                        app:layout_constraintStart_toEndOf="@+id/policy_app_icon"
+                        app:layout_constraintTop_toTopOf="@+id/policy_app_icon"
+                        tools:text="App Name" />
+
+                    <TextView
+                        android:id="@+id/policy_package_name"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="middle"
+                        android:maxLines="2"
+                        android:text="@{item.packageName}"
+                        android:textAppearance="?attr/textAppearanceBodySmall"
+                        android:textColor="?attr/colorOnSurfaceVariant"
+                        app:layout_constraintEnd_toEndOf="@id/policy_app_name"
+                        app:layout_constraintStart_toStartOf="@id/policy_app_name"
+                        app:layout_constraintTop_toBottomOf="@id/policy_app_name"
+                        tools:text="com.example.package" />
+
+                    <FrameLayout
+                        android:id="@+id/policy_indicator"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="12dp"
+                        android:nextFocusLeft="@id/policy"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <com.google.android.material.materialswitch.MaterialSwitch
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="@={item.enabled}"
+                            app:gone="@{item.showSlider}" />
+
+                        <com.google.android.material.slider.Slider
+                            android:layout_width="96dp"
+                            android:layout_height="wrap_content"
+                            android:stepSize="1"
+                            android:value="@={DataBindingAdaptersKt.policyToSliderValue(item.sliderValue)}"
+                            android:valueFrom="1"
+                            android:valueTo="3"
+                            app:goneUnless="@{item.showSlider}"
+                            app:labelBehavior="floating"
+                            app:labelFormatter="@{item.sliderValueToPolicyString}" />
+                    </FrameLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <LinearLayout
+                    android:id="@+id/policy_expand_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/colorSurfaceVariant"
+                    android:orientation="horizontal"
+                    app:gone="@{!item.isExpanded}"
+                    tools:visibility="visible">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/policy_notify"
+                        style="?attr/borderlessButtonStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:onClick="@{() -> item.toggleNotify()}"
+                        android:text="@string/superuser_toggle_notification"
+                        android:textAllCaps="false"
+                        android:textAppearance="?attr/textAppearanceLabelLarge"
+                        app:icon="@drawable/ic_notifications_md2"
+                        app:isSelected="@{item.shouldNotify}" />
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginVertical="8dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/policy_log"
+                        style="?attr/borderlessButtonStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:onClick="@{() -> item.toggleLog()}"
+                        android:text="@string/logs"
+                        android:textAllCaps="false"
+                        android:textAppearance="?attr/textAppearanceLabelLarge"
+                        app:icon="@drawable/ic_bug_md2"
+                        app:isSelected="@{item.shouldLog}" />
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginVertical="8dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/policy_delete"
+                        style="?attr/borderlessButtonStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:onClick="@{() -> item.revoke()}"
+                        android:text="@string/superuser_toggle_revoke"
+                        android:textAllCaps="false"
+                        android:textAppearance="?attr/textAppearanceLabelLarge"
+                        android:textColor="?attr/colorError"
+                        app:icon="@drawable/ic_delete_md2"
+                        app:iconTint="?attr/colorError" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </FrameLayout>
+
+</layout>

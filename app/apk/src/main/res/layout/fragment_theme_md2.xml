@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="com.topjohnwu.magisk.ui.theme.Theme" />
+        <variable
+            name="viewModel"
+            type="com.topjohnwu.magisk.ui.theme.ThemeViewModel" />
+    </data>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:fillViewport="true"
+        android:fitsSystemWindows="true">
+
+        <LinearLayout
+            android:id="@+id/theme_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="16dp"
+            android:paddingTop="?attr/actionBarSize"
+            android:paddingEnd="16dp"
+            android:paddingBottom="24dp">
+
+            <include
+                android:id="@+id/theme_card_dark"
+                layout="@layout/item_tappable_headline"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:item="@{viewModel.themeHeadline}"
+                app:listener="@{viewModel}" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</layout>

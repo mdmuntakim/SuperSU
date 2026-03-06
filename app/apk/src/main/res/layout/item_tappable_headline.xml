@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="item"
+            type="com.topjohnwu.magisk.view.TappableHeadlineItem" />
+
+        <variable
+            name="listener"
+            type="com.topjohnwu.magisk.view.TappableHeadlineItem.Listener" />
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        style="?attr/materialCardViewOutlinedStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="8dp"
+        android:onClick="@{() -> listener.onItemPressed(item)}"
+        tools:layout_gravity="center">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="56dp">
+
+            <ImageView
+                android:id="@+id/tappable_icon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="16dp"
+                android:background="@null"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@{item.icon}"
+                app:tint="?attr/colorPrimary"
+                tools:srcCompat="@drawable/ic_day_night" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:requiresFadingEdge="horizontal"
+                android:singleLine="true"
+                android:text="@{item.title}"
+                android:textAppearance="?attr/textAppearanceTitleMedium"
+                android:textColor="?attr/colorOnSurface"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/headline_icon_pointer"
+                app:layout_constraintStart_toEndOf="@+id/tappable_icon"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Tappable Headline" />
+
+            <ImageView
+                android:id="@+id/headline_icon_pointer"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="12dp"
+                android:background="@null"
+                android:rotation="180"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_back_md2"
+                app:tint="?attr/colorOnSurfaceVariant" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</layout>

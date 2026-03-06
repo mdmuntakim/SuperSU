@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="com.topjohnwu.magisk.R" />
+        <variable
+            name="item"
+            type="com.topjohnwu.magisk.ui.module.LocalModuleRvItem" />
+        <variable
+            name="viewModel"
+            type="com.topjohnwu.magisk.ui.module.ModuleViewModel" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/module"
+            style="?attr/materialCardViewOutlinedStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginVertical="8dp"
+            android:focusable="@{!item.removed &amp;&amp; item.enabled &amp;&amp; !item.showNotice}"
+            app:cardForegroundColor="@{(!item.removed &amp;&amp; item.enabled &amp;&amp; !item.showNotice) ? null : @color/color_card_background_color_selector}"
+            app:isEnabled="@{!item.removed &amp;&amp; item.enabled &amp;&amp; !item.showNotice}">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:animateLayoutChanges="true">
+
+                <ImageView
+                    android:id="@+id/module_state_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:adjustViewBounds="true"
+                    android:alpha=".08"
+                    app:gone="@{!item.removed &amp;&amp; !item.updated}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@{item.removed ? R.drawable.ic_delete_md2 : (item.updated ? R.drawable.ic_update_md2 : 0)}"
+                    app:tint="?attr/colorOnSurface" />
+
+                <TextView
+                    android:id="@+id/module_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="12dp"
+                    android:text="@{item.item.name}"
+                    android:textAppearance="?attr/textAppearanceTitleMedium"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toStartOf="@+id/module_indicator"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:strikeThrough="@{item.removed}"
+                    tools:text="Module Name" />
+
+                <TextView
+                    android:id="@+id/module_version_author"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@{@string/module_version_author(item.item.version, item.item.author)}"
+                    android:textAppearance="?attr/textAppearanceBodySmall"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    app:layout_constraintEnd_toEndOf="@+id/module_title"
+                    app:layout_constraintStart_toStartOf="@+id/module_title"
+                    app:layout_constraintTop_toBottomOf="@+id/module_title"
+                    app:strikeThrough="@{item.removed}"
+                    tools:text="v1.0 by Author" />
+
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/module_indicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="12dp"
+                    android:checked="@={item.enabled}"
+                    app:layout_constraintBottom_toBottomOf="@+id/module_version_author"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/module_title" />
+
+                <TextView
+                    android:id="@+id/module_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="16dp"
+                    android:maxLines="5"
+                    android:text="@{item.item.description}"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    app:gone="@{item.item.description.empty}"
+                    app:layout_constraintTop_toBottomOf="@+id/module_version_author"
+                    app:strikeThrough="@{item.removed}"
+                    tools:text="This is a description of the module." />
+
+                <com.google.android.material.divider.MaterialDivider
+                    android:id="@+id/module_divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    app:layout_constraintTop_toBottomOf="@+id/module_description" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/module_config"
+                    style="?attr/borderlessButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="@{() -> viewModel.runAction(item.item.id, item.item.name)}"
+                    android:text="@string/module_action"
+                    android:textAllCaps="false"
+                    android:textAppearance="?attr/textAppearanceLabelLarge"
+                    app:goneUnless="@{item.showAction}"
+                    app:icon="@drawable/ic_action_md2"
+                    app:layout_constraintBottom_toBottomOf="@+id/module_remove"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/module_remove" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/module_remove"
+                    style="?attr/borderlessButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:enabled="@{!item.updated}"
+                    android:onClick="@{() -> item.delete()}"
+                    android:text="@{item.removed ? @string/module_state_restore : @string/module_state_remove}"
+                    android:textAllCaps="false"
+                    android:textAppearance="?attr/textAppearanceLabelLarge"
+                    android:textColor="?attr/colorError"
+                    app:icon="@{item.removed ? @drawable/ic_restart : @drawable/ic_delete_md2}"
+                    app:iconGravity="textStart"
+                    app:iconTint="?attr/colorError"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/module_divider" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/module_update"
+                    style="?attr/borderlessButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:enabled="@{item.updateReady}"
+                    android:onClick="@{() -> viewModel.downloadPressed(item.item.updateInfo)}"
+                    android:text="@string/update"
+                    android:textAllCaps="false"
+                    android:textAppearance="?attr/textAppearanceLabelLarge"
+                    app:goneUnless="@{item.showUpdate}"
+                    app:icon="@drawable/ic_update_md2"
+                    app:layout_constraintBottom_toBottomOf="@+id/module_remove"
+                    app:layout_constraintEnd_toStartOf="@+id/module_remove"
+                    app:layout_constraintTop_toTopOf="@+id/module_remove" />
+
+                <androidx.constraintlayout.widget.Barrier
+                    android:id="@+id/bottom_bar_barrier"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:barrierDirection="start"
+                    app:referencedIds="@{viewModel.bottomBarBarrierIds}" />
+
+                <TextView
+                    android:id="@+id/module_notice_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="@{item.noticeText}"
+                    android:textAppearance="?attr/textAppearanceLabelMedium"
+                    android:textColor="?attr/colorError"
+                    app:goneUnless="@{item.showNotice}"
+                    app:layout_constraintBottom_toBottomOf="@+id/module_remove"
+                    app:layout_constraintEnd_toStartOf="@+id/bottom_bar_barrier"
+                    app:layout_constraintStart_toEndOf="@id/module_config"
+                    app:layout_constraintTop_toTopOf="@+id/module_remove"
+                    tools:text="Notice text goes here" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </FrameLayout>
+
+</layout>

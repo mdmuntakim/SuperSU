@@ -1,10 +1,11 @@
 name: Magisk Build
+
 on:
   push:
     branches: [main]
     paths:
-      - "app/"
-      - "native/"
+      - "app/**"
+      - "native/**"
       - "build.py"
       - ".github/workflows/build.yml"
   pull_request:
@@ -20,6 +21,12 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: "recursive"
+          fetch-depth: 0
+
+      - name: Fix Submodules
+        run: |
+          git submodule sync --recursive
+          git submodule update --init --recursive
 
       - name: Setup environment
         uses: ./.github/actions/setup
@@ -30,9 +37,12 @@ jobs:
         run: chmod +x build.py
 
       - name: Build release
-        run: ./build.py -vr all
+        run: python3 build.py -vr all
+
+      - name: Stop gradle daemon
+        run: ./app/gradlew --stop || true
+
       - name: Upload build artifact
-      
         uses: actions/upload-artifact@v4
         with:
           name: ${{ github.sha }}-release
